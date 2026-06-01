@@ -1,0 +1,991 @@
+{
+  "_default": {},
+  "usuarios": {
+    "1": {
+      "discord_id": 571705163471912981,
+      "fichas": 9,
+      "bolso": [
+        {
+          "carta_id": "4ed0304a",
+          "nome": "Esqueleto Guerreiro",
+          "quantidade": 3
+        },
+        {
+          "carta_id": "15cedd19",
+          "nome": "Zumbi das Catacumbas",
+          "quantidade": 3
+        },
+        {
+          "carta_id": "5411448c",
+          "nome": "Sombra Faminta",
+          "quantidade": 3
+        },
+        {
+          "carta_id": "63641fcf",
+          "nome": "Carniçal",
+          "quantidade": 3
+        },
+        {
+          "carta_id": "764c0ef1",
+          "nome": "Ogro das Cavernas",
+          "quantidade": 2
+        },
+        {
+          "carta_id": "2f028949",
+          "nome": "Revenant",
+          "quantidade": 2
+        },
+        {
+          "carta_id": "fd417928",
+          "nome": "Sombra Assassina",
+          "quantidade": 2
+        },
+        {
+          "carta_id": "ad9ca8d8",
+          "nome": "Wraith Encadeado",
+          "quantidade": 2
+        },
+        {
+          "carta_id": "90d9f589",
+          "nome": "Senhor dos Mortos",
+          "quantidade": 2
+        },
+        {
+          "carta_id": "2b1df7c5",
+          "nome": "Demônio das Sombras",
+          "quantidade": 2
+        },
+        {
+          "carta_id": "cf2ce29f",
+          "nome": "Ritual Necromantico",
+          "quantidade": 2
+        },
+        {
+          "carta_id": "ffe91320",
+          "nome": "Dreno de Vida",
+          "quantidade": 2
+        },
+        {
+          "carta_id": "2340fcb7",
+          "nome": "Palavras do Esquecimento",
+          "quantidade": 2
+        },
+        {
+          "carta_id": "732143f8",
+          "nome": "Bênção Sombria",
+          "quantidade": 2
+        },
+        {
+          "carta_id": "9d697ada",
+          "nome": "Explosão Arcana",
+          "quantidade": 2
+        },
+        {
+          "carta_id": "cd6e3a9b",
+          "nome": "Explosão de Ossos",
+          "quantidade": 2
+        },
+        {
+          "carta_id": "b8c4e5a5",
+          "nome": "Contra-Ataque Espectral",
+          "quantidade": 2
+        },
+        {
+          "carta_id": "1484dc74",
+          "nome": "Correntes Espectrais",
+          "quantidade": 2
+        }
+      ],
+      "imagem": null
+    },
+    "2": {
+      "discord_id": 259700344152391680,
+      "fichas": 9,
+      "bolso": [
+        {
+          "carta_id": "4ed0304a",
+          "nome": "Esqueleto Guerreiro",
+          "quantidade": 3
+        },
+        {
+          "carta_id": "15cedd19",
+          "nome": "Zumbi das Catacumbas",
+          "quantidade": 3
+        },
+        {
+          "carta_id": "5411448c",
+          "nome": "Sombra Faminta",
+          "quantidade": 3
+        },
+        {
+          "carta_id": "63641fcf",
+          "nome": "Carniçal",
+          "quantidade": 3
+        },
+        {
+          "carta_id": "764c0ef1",
+          "nome": "Ogro das Cavernas",
+          "quantidade": 2
+        },
+        {
+          "carta_id": "2f028949",
+          "nome": "Revenant",
+          "quantidade": 2
+        },
+        {
+          "carta_id": "fd417928",
+          "nome": "Sombra Assassina",
+          "quantidade": 2
+        },
+        {
+          "carta_id": "ad9ca8d8",
+          "nome": "Wraith Encadeado",
+          "quantidade": 2
+        },
+        {
+          "carta_id": "90d9f589",
+          "nome": "Senhor dos Mortos",
+          "quantidade": 2
+        },
+        {
+          "carta_id": "2b1df7c5",
+          "nome": "Demônio das Sombras",
+          "quantidade": 2
+        },
+        {
+          "carta_id": "cf2ce29f",
+          "nome": "Ritual Necromantico",
+          "quantidade": 2
+        },
+        {
+          "carta_id": "ffe91320",
+          "nome": "Dreno de Vida",
+          "quantidade": 2
+        },
+        {
+          "carta_id": "2340fcb7",
+          "nome": "Palavras do Esquecimento",
+          "quantidade": 2
+        },
+        {
+          "carta_id": "732143f8",
+          "nome": "Bênção Sombria",
+          "quantidade": 2
+        },
+        {
+          "carta_id": "9d697ada",
+          "nome": "Explosão Arcana",
+          "quantidade": 2
+        },
+        {
+          "carta_id": "cd6e3a9b",
+          "nome": "Explosão de Ossos",
+          "quantidade": 2
+        },
+        {
+          "carta_id": "b8c4e5a5",
+          "nome": "Contra-Ataque Espectral",
+          "quantidade": 2
+        },
+        {
+          "carta_id": "1484dc74",
+          "nome": "Correntes Espectrais",
+          "quantidade": 2
+        }
+      ],
+      "imagem": null,
+      "caixa": [
+        {
+          "carta_id": "88d46024",
+          "nome": "Troll da Ponte",
+          "quantidade": 1
+        },
+        {
+          "carta_id": "63641fcf",
+          "nome": "Carniçal",
+          "quantidade": 1
+        },
+        {
+          "carta_id": "764c0ef1",
+          "nome": "Ogro das Cavernas",
+          "quantidade": 1
+        },
+        {
+          "carta_id": "4ed0304a",
+          "nome": "Esqueleto Guerreiro",
+          "quantidade": 1
+        }
+      ]
+    },
+    "3": {
+      "discord_id": 1090977268379156502,
+      "fichas": 0,
+      "bolso": [
+        {
+          "carta_id": "2f028949",
+          "nome": "Revenant",
+          "quantidade": 2
+        },
+        {
+          "carta_id": "674be543",
+          "nome": "Cavaleiro Esqueleto",
+          "quantidade": 3
+        },
+        {
+          "carta_id": "f4bd3d1b",
+          "nome": "Ossos Fragmentados",
+          "quantidade": 3
+        },
+        {
+          "carta_id": "15cedd19",
+          "nome": "Zumbi das Catacumbas",
+          "quantidade": 1
+        },
+        {
+          "carta_id": "572c70bd",
+          "nome": "Fantasma Errante",
+          "quantidade": 1
+        },
+        {
+          "carta_id": "732143f8",
+          "nome": "Bênção Sombria",
+          "quantidade": 1
+        },
+        {
+          "carta_id": "4ed0304a",
+          "nome": "Esqueleto Guerreiro",
+          "quantidade": 4
+        },
+        {
+          "carta_id": "720fc1d9",
+          "nome": "Wight dos Túmulos",
+          "quantidade": 2
+        },
+        {
+          "carta_id": "a26c3ee0",
+          "nome": "Banshee",
+          "quantidade": 1
+        },
+        {
+          "carta_id": "5411448c",
+          "nome": "Sombra Faminta",
+          "quantidade": 4
+        },
+        {
+          "carta_id": "63641fcf",
+          "nome": "Carniçal",
+          "quantidade": 2
+        },
+        {
+          "carta_id": "23802ffb",
+          "nome": "Múmia do Deserto",
+          "quantidade": 1
+        },
+        {
+          "carta_id": "b198ef62",
+          "nome": "Grito da Banshee",
+          "quantidade": 1
+        },
+        {
+          "carta_id": "64838808",
+          "nome": "Necromante Menor",
+          "quantidade": 3
+        },
+        {
+          "carta_id": "1484dc74",
+          "nome": "Correntes Espectrais",
+          "quantidade": 1
+        },
+        {
+          "carta_id": "ad4bb7f2",
+          "nome": "Espectro Drenador",
+          "quantidade": 1
+        },
+        {
+          "carta_id": "fd417928",
+          "nome": "Sombra Assassina",
+          "quantidade": 1
+        },
+        {
+          "carta_id": "b1c26eb1",
+          "nome": "Ressurreição Menor",
+          "quantidade": 2
+        },
+        {
+          "carta_id": "3ea9af81",
+          "nome": "Véu das Sombras",
+          "quantidade": 1
+        },
+        {
+          "carta_id": "abd946d7",
+          "nome": "Golem de Pedra",
+          "quantidade": 1
+        },
+        {
+          "carta_id": "2b1df7c5",
+          "nome": "Demônio das Sombras",
+          "quantidade": 1
+        },
+        {
+          "carta_id": "51488dac",
+          "nome": "Lich",
+          "quantidade": 1
+        },
+        {
+          "carta_id": "88d46024",
+          "nome": "Troll da Ponte",
+          "quantidade": 1
+        },
+        {
+          "carta_id": "8faa6e07",
+          "nome": "Espectro do Pântano",
+          "quantidade": 1
+        }
+      ],
+      "caixa": [],
+      "imagem": null
+    }
+  },
+  "catalogo": {
+    "1": {
+      "numero": 1,
+      "nome": "Esqueleto Guerreiro",
+      "tipo": "monstro",
+      "raridade": "Comum",
+      "chance": 22,
+      "chance_monstro": 22,
+      "imagem": null,
+      "descricao": "Outrora um soldado leal, agora serve eternamente aos caprichos da morte. Seus ossos rangem a cada passo, ecoando batalhas esquecidas.",
+      "efeito": null,
+      "gatilho": null,
+      "ataque": 15,
+      "defesa": 20,
+      "estrelas": 1,
+      "carta_id": "4ed0304a"
+    },
+    "2": {
+      "numero": 2,
+      "nome": "Zumbi das Catacumbas",
+      "tipo": "monstro",
+      "raridade": "Comum",
+      "chance": 22,
+      "chance_monstro": 22,
+      "imagem": null,
+      "descricao": "Arrancado de seu túmulo por magia negra, caminha sem propósito. Lento, mas imparável enquanto houver carne à frente.",
+      "efeito": null,
+      "gatilho": null,
+      "ataque": 20,
+      "defesa": 10,
+      "estrelas": 1,
+      "carta_id": "15cedd19"
+    },
+    "3": {
+      "numero": 3,
+      "nome": "Fantasma Errante",
+      "tipo": "monstro",
+      "raridade": "Comum",
+      "chance": 22,
+      "chance_monstro": 22,
+      "imagem": null,
+      "descricao": "Preso entre os mundos dos vivos e dos mortos, vaga por corredores de castelos esquecidos. Sua forma etérea desafia lâminas e flechas.",
+      "efeito": null,
+      "gatilho": null,
+      "ataque": 10,
+      "defesa": 35,
+      "estrelas": 1,
+      "carta_id": "572c70bd"
+    },
+    "4": {
+      "numero": 4,
+      "nome": "Sombra Faminta",
+      "tipo": "monstro",
+      "raridade": "Comum",
+      "chance": 20.5,
+      "chance_monstro": 20.5,
+      "imagem": null,
+      "descricao": "Criatura nascida da escuridão pura, devora a luz e o calor dos vivos. Onde passa, o frio do túmulo se instala.",
+      "efeito": null,
+      "gatilho": null,
+      "ataque": 30,
+      "defesa": 40,
+      "estrelas": 2,
+      "carta_id": "5411448c"
+    },
+    "5": {
+      "numero": 5,
+      "nome": "Carniçal",
+      "tipo": "monstro",
+      "raridade": "Comum",
+      "chance": 20.5,
+      "chance_monstro": 20.5,
+      "imagem": null,
+      "descricao": "Predador da noite que habita cemitérios e campos de batalha. Seus dentes trituam ossos com a mesma facilidade que carne.",
+      "efeito": null,
+      "gatilho": null,
+      "ataque": 45,
+      "defesa": 30,
+      "estrelas": 2,
+      "carta_id": "63641fcf"
+    },
+    "6": {
+      "numero": 6,
+      "nome": "Espectro do Pântano",
+      "tipo": "monstro",
+      "raridade": "Comum",
+      "chance": 20.5,
+      "chance_monstro": 20.5,
+      "imagem": null,
+      "descricao": "Morto por traição nas profundezas de um pântano amaldiçoado. Sua raiva o mantém preso ao plano material, impenetrável como as águas que o afogaram.",
+      "efeito": null,
+      "gatilho": null,
+      "ataque": 25,
+      "defesa": 65,
+      "estrelas": 2,
+      "carta_id": "8faa6e07"
+    },
+    "7": {
+      "numero": 7,
+      "nome": "Múmia do Deserto",
+      "tipo": "monstro",
+      "raridade": "Comum",
+      "chance": 17,
+      "chance_monstro": 17,
+      "imagem": null,
+      "descricao": "Guardião de tumbas reais, envolto em bandagens impregnadas com óleos sagrados. Serve seu faraó mesmo além da morte.",
+      "efeito": null,
+      "gatilho": null,
+      "ataque": 60,
+      "defesa": 80,
+      "estrelas": 3,
+      "carta_id": "23802ffb"
+    },
+    "8": {
+      "numero": 8,
+      "nome": "Revenant",
+      "tipo": "monstro",
+      "raridade": "Incomum",
+      "chance": 11,
+      "chance_monstro": 11,
+      "imagem": null,
+      "descricao": "Retornou dos mortos movido por um único propósito: vingança. Não descansará até que seu assassino seja destruído.",
+      "efeito": null,
+      "gatilho": null,
+      "ataque": 75,
+      "defesa": 65,
+      "estrelas": 3,
+      "carta_id": "2f028949"
+    },
+    "9": {
+      "numero": 9,
+      "nome": "Wight dos Túmulos",
+      "tipo": "monstro",
+      "raridade": "Comum",
+      "chance": 17,
+      "chance_monstro": 17,
+      "imagem": null,
+      "descricao": "Antigo guerreiro corrompido pela energia necromantica. Sua simples presença drena a força vital dos que se aproximam.",
+      "efeito": null,
+      "gatilho": null,
+      "ataque": 55,
+      "defesa": 90,
+      "estrelas": 3,
+      "carta_id": "720fc1d9"
+    },
+    "10": {
+      "numero": 10,
+      "nome": "Ogro das Cavernas",
+      "tipo": "monstro",
+      "raridade": "Comum",
+      "chance": 18.5,
+      "chance_monstro": 18.5,
+      "imagem": null,
+      "descricao": "Criatura brutal que habita as profundezas da terra. Não é morto-vivo, mas sua selvageria rivaliza com qualquer horror noturno.",
+      "efeito": null,
+      "gatilho": null,
+      "ataque": 80,
+      "defesa": 60,
+      "estrelas": 3,
+      "carta_id": "764c0ef1"
+    },
+    "11": {
+      "numero": 11,
+      "nome": "Troll da Ponte",
+      "tipo": "monstro",
+      "raridade": "Comum",
+      "chance": 18.5,
+      "chance_monstro": 18.5,
+      "imagem": null,
+      "descricao": "Guardião implacável de passagens. Regenera ferimentos com velocidade assombrosa, frustrando todos que tentam forçar sua passagem.",
+      "efeito": null,
+      "gatilho": null,
+      "ataque": 65,
+      "defesa": 95,
+      "estrelas": 3,
+      "carta_id": "88d46024"
+    },
+    "12": {
+      "numero": 12,
+      "nome": "Banshee",
+      "tipo": "monstro",
+      "raridade": "Incomum",
+      "chance": 10,
+      "chance_monstro": 10,
+      "imagem": null,
+      "descricao": "Espírito de mulher morta em desespero, cujo grito prediz — e causa — a morte. Sua aparência congela o sangue dos mais corajosos.",
+      "efeito": null,
+      "gatilho": null,
+      "ataque": 85,
+      "defesa": 100,
+      "estrelas": 4,
+      "carta_id": "a26c3ee0"
+    },
+    "13": {
+      "numero": 13,
+      "nome": "Cavaleiro Esqueleto",
+      "tipo": "monstro",
+      "raridade": "Incomum",
+      "chance": 10,
+      "chance_monstro": 10,
+      "imagem": null,
+      "descricao": "Paladino caído, reanimado com sua armadura completa. Combina a disciplina marcial que possuía em vida com a imortalidade da morte.",
+      "efeito": null,
+      "gatilho": null,
+      "ataque": 100,
+      "defesa": 115,
+      "estrelas": 4,
+      "carta_id": "674be543"
+    },
+    "14": {
+      "numero": 14,
+      "nome": "Golem de Pedra",
+      "tipo": "monstro",
+      "raridade": "Incomum",
+      "chance": 10,
+      "chance_monstro": 10,
+      "imagem": null,
+      "descricao": "Construto arcano moldado por magos antigos. Não sente dor, não conhece medo. Obedece apenas a quem carrega o selo de seu criador.",
+      "efeito": null,
+      "gatilho": null,
+      "ataque": 90,
+      "defesa": 125,
+      "estrelas": 4,
+      "carta_id": "abd946d7"
+    },
+    "15": {
+      "numero": 15,
+      "nome": "Dragão Zumbi",
+      "tipo": "monstro",
+      "raridade": "Rara",
+      "chance": 6.5,
+      "chance_monstro": 6.5,
+      "imagem": null,
+      "descricao": "Outrora o terror dos céus, agora serve em putrefação. Sua respiração exala gases pestilenciais que corroem armaduras e envenenam o ar.",
+      "efeito": null,
+      "gatilho": null,
+      "ataque": 140,
+      "defesa": 120,
+      "estrelas": 5,
+      "carta_id": "7d288c0a"
+    },
+    "16": {
+      "numero": 16,
+      "nome": "Lich",
+      "tipo": "monstro",
+      "raridade": "Rara",
+      "chance": 6.5,
+      "chance_monstro": 6.5,
+      "imagem": null,
+      "descricao": "Mago que sacrificou sua mortalidade em troca de poder eterno. Guarda sua alma em um phylactery oculto, tornando-o quase impossível de destruir permanentemente.",
+      "efeito": null,
+      "gatilho": null,
+      "ataque": 120,
+      "defesa": 145,
+      "estrelas": 5,
+      "carta_id": "51488dac"
+    },
+    "17": {
+      "numero": 17,
+      "nome": "Espectro Drenador",
+      "tipo": "monstro_efeito",
+      "raridade": "Incomum",
+      "chance": 10.5,
+      "chance_monstro": 10.5,
+      "imagem": null,
+      "descricao": "Nascido da confluência entre o plano das sombras e o material.",
+      "efeito": "Ao ser invocado, causa 20 de dano direto aos pontos de vida do oponente.",
+      "gatilho": null,
+      "ataque": 80,
+      "defesa": 95,
+      "estrelas": 4,
+      "carta_id": "ad4bb7f2"
+    },
+    "18": {
+      "numero": 18,
+      "nome": "Necromante Menor",
+      "tipo": "monstro_efeito",
+      "raridade": "Incomum",
+      "chance": 11,
+      "chance_monstro": 11,
+      "imagem": null,
+      "descricao": "Aprendiz das artes proibidas, capaz de animar os mortos com um sussurro.",
+      "efeito": "Ao ser invocado, todos os seus monstros de nível 1 e 2 ganham +10 de ataque até o fim do turno.",
+      "gatilho": null,
+      "ataque": 75,
+      "defesa": 90,
+      "estrelas": 4,
+      "carta_id": "64838808"
+    },
+    "19": {
+      "numero": 19,
+      "nome": "Wraith Encadeado",
+      "tipo": "monstro_efeito",
+      "raridade": "Incomum",
+      "chance": 10.5,
+      "chance_monstro": 10.5,
+      "imagem": null,
+      "descricao": "Alma aprisionada por correntes de magia negra, forçada a servir quem as segura.",
+      "efeito": "Ao ser invocado, destrua uma carta de efeito ou armadilha do campo do oponente.",
+      "gatilho": null,
+      "ataque": 95,
+      "defesa": 100,
+      "estrelas": 4,
+      "carta_id": "ad9ca8d8"
+    },
+    "20": {
+      "numero": 20,
+      "nome": "Sombra Assassina",
+      "tipo": "monstro_efeito",
+      "raridade": "Incomum",
+      "chance": 11,
+      "chance_monstro": 11,
+      "imagem": null,
+      "descricao": "Executora silenciosa nascida nas sombras do plano etéreo.",
+      "efeito": "Ao ser invocado, destrua um monstro do oponente com defesa igual ou menor que 60.",
+      "gatilho": null,
+      "ataque": 105,
+      "defesa": 90,
+      "estrelas": 4,
+      "carta_id": "fd417928"
+    },
+    "21": {
+      "numero": 21,
+      "nome": "Senhor dos Mortos",
+      "tipo": "monstro_efeito",
+      "raridade": "Lendária",
+      "chance": 3,
+      "chance_monstro": 3,
+      "imagem": null,
+      "descricao": "Comandante de exércitos de mortos-vivos, sua presença fortalece todos os que servem à morte.",
+      "efeito": "Ao ser invocado, todos os seus monstros mortos-vivos em campo ganham +15 de ataque e defesa até o fim do turno.",
+      "gatilho": null,
+      "ataque": 130,
+      "defesa": 130,
+      "estrelas": 5,
+      "carta_id": "90d9f589"
+    },
+    "22": {
+      "numero": 22,
+      "nome": "Demônio das Sombras",
+      "tipo": "monstro_efeito",
+      "raridade": "Rara",
+      "chance": 6,
+      "chance_monstro": 6,
+      "imagem": null,
+      "descricao": "Entidade do Abismo convocada através de rituais proibidos.",
+      "efeito": "Ao ser invocado, causa 30 de dano direto aos pontos de vida do oponente.",
+      "gatilho": null,
+      "ataque": 145,
+      "defesa": 120,
+      "estrelas": 5,
+      "carta_id": "2b1df7c5"
+    },
+    "23": {
+      "numero": 23,
+      "nome": "Cavaleiro da Morte",
+      "tipo": "monstro_efeito",
+      "raridade": "Rara",
+      "chance": 6,
+      "chance_monstro": 6,
+      "imagem": null,
+      "descricao": "Campeão das trevas, ungido pelo próprio deus da morte.",
+      "efeito": "Ao ser invocado, destrua o monstro com menor ataque no campo do oponente.",
+      "gatilho": null,
+      "ataque": 135,
+      "defesa": 135,
+      "estrelas": 5,
+      "carta_id": "9aa49f58"
+    },
+    "24": {
+      "numero": 24,
+      "nome": "Lich Supremo",
+      "tipo": "monstro_efeito",
+      "raridade": "Lendária",
+      "chance": 1,
+      "chance_monstro": 1,
+      "imagem": null,
+      "descricao": "O arquilich, senhor de todos os mortos-vivos, cujo poder transcende os limites da magia mortal.",
+      "efeito": "Ao ser invocado, destrua uma carta à sua escolha no campo do oponente (monstro, efeito ou armadilha).",
+      "gatilho": null,
+      "ataque": 150,
+      "defesa": 140,
+      "estrelas": 5,
+      "carta_id": "5659eaad"
+    },
+    "25": {
+      "numero": 25,
+      "nome": "Ritual Necromantico",
+      "tipo": "efeito",
+      "raridade": "Comum",
+      "chance": 21.5,
+      "chance_monstro": null,
+      "imagem": null,
+      "descricao": "Os grimórios dos mortos revelam segredos que os vivos nunca ousaram buscar.",
+      "efeito": "Compre 2 cartas do deck.",
+      "gatilho": null,
+      "ataque": null,
+      "defesa": null,
+      "estrelas": null,
+      "carta_id": "cf2ce29f"
+    },
+    "26": {
+      "numero": 26,
+      "nome": "Dreno de Vida",
+      "tipo": "efeito",
+      "raridade": "Rara",
+      "chance": 7,
+      "chance_monstro": null,
+      "imagem": null,
+      "descricao": "A magia necromantica suga a vitalidade dos vivos para alimentar os mortos.",
+      "efeito": "Cause 40 de dano direto aos pontos de vida do oponente.",
+      "gatilho": null,
+      "ataque": null,
+      "defesa": null,
+      "estrelas": null,
+      "carta_id": "ffe91320"
+    },
+    "27": {
+      "numero": 27,
+      "nome": "Ossos Fragmentados",
+      "tipo": "efeito",
+      "raridade": "Comum",
+      "chance": 22,
+      "chance_monstro": null,
+      "imagem": null,
+      "descricao": "Um feitiço simples, mas devastador contra servos menores.",
+      "efeito": "Destrua um monstro do oponente com ataque igual ou menor que 50.",
+      "gatilho": null,
+      "ataque": null,
+      "defesa": null,
+      "estrelas": null,
+      "carta_id": "f4bd3d1b"
+    },
+    "28": {
+      "numero": 28,
+      "nome": "Toque da Morte",
+      "tipo": "efeito",
+      "raridade": "Incomum",
+      "chance": 12,
+      "chance_monstro": null,
+      "imagem": null,
+      "descricao": "Onde a mão da morte toca, nenhuma armadura resiste.",
+      "efeito": "Destrua um monstro do oponente com defesa igual ou menor que 70.",
+      "gatilho": null,
+      "ataque": null,
+      "defesa": null,
+      "estrelas": null,
+      "carta_id": "fb09380b"
+    },
+    "29": {
+      "numero": 29,
+      "nome": "Véu das Sombras",
+      "tipo": "efeito",
+      "raridade": "Incomum",
+      "chance": 12,
+      "chance_monstro": null,
+      "imagem": null,
+      "descricao": "A escuridão envolve os inimigos, entorpecendo seus reflexos e enfraquecendo seus golpes.",
+      "efeito": "Reduza o ataque de todos os monstros do oponente em 20 até o fim do turno.",
+      "gatilho": null,
+      "ataque": null,
+      "defesa": null,
+      "estrelas": null,
+      "carta_id": "3ea9af81"
+    },
+    "30": {
+      "numero": 30,
+      "nome": "Bênção Sombria",
+      "tipo": "efeito",
+      "raridade": "Rara",
+      "chance": 8,
+      "chance_monstro": null,
+      "imagem": null,
+      "descricao": "O favor dos mortos fortalece o campeão escolhido além dos limites naturais.",
+      "efeito": "Aumente o ataque e a defesa de um monstro seu em 25 até o fim do turno.",
+      "gatilho": null,
+      "ataque": null,
+      "defesa": null,
+      "estrelas": null,
+      "carta_id": "732143f8"
+    },
+    "31": {
+      "numero": 31,
+      "nome": "Explosão Arcana",
+      "tipo": "efeito",
+      "raridade": "Incomum",
+      "chance": 12.5,
+      "chance_monstro": null,
+      "imagem": null,
+      "descricao": "Energia mágica bruta desfaz qualquer encantamento ou armadilha com igual facilidade.",
+      "efeito": "Destrua uma carta de efeito ou armadilha do campo do oponente.",
+      "gatilho": null,
+      "ataque": null,
+      "defesa": null,
+      "estrelas": null,
+      "carta_id": "9d697ada"
+    },
+    "32": {
+      "numero": 32,
+      "nome": "Ressurreição Menor",
+      "tipo": "efeito",
+      "raridade": "Incomum",
+      "chance": 13,
+      "chance_monstro": null,
+      "imagem": null,
+      "descricao": "Os mortos retornam, e com eles, o poder que carregavam em vida.",
+      "efeito": "Compre 1 carta do deck e aumente o ataque de um monstro seu em 15 até o fim do turno.",
+      "gatilho": null,
+      "ataque": null,
+      "defesa": null,
+      "estrelas": null,
+      "carta_id": "b1c26eb1"
+    },
+    "33": {
+      "numero": 33,
+      "nome": "Escudo Espectral",
+      "tipo": "efeito",
+      "raridade": "Incomum",
+      "chance": 12.5,
+      "chance_monstro": null,
+      "imagem": null,
+      "descricao": "Forças etéreas envolvem o monstro escolhido, tornando-o temporariamente impenetrável.",
+      "efeito": "Aumente a defesa de um monstro seu em 40 até o fim do turno.",
+      "gatilho": null,
+      "ataque": null,
+      "defesa": null,
+      "estrelas": null,
+      "carta_id": "6f3a5f32"
+    },
+    "34": {
+      "numero": 34,
+      "nome": "Palavras do Esquecimento",
+      "tipo": "efeito",
+      "raridade": "Rara",
+      "chance": 7,
+      "chance_monstro": null,
+      "imagem": null,
+      "descricao": "Pronunciar o nome verdadeiro de um morto-vivo é condená-lo ao descanso eterno.",
+      "efeito": "Destrua um monstro do oponente com ataque igual ou menor que 80.",
+      "gatilho": null,
+      "ataque": null,
+      "defesa": null,
+      "estrelas": null,
+      "carta_id": "2340fcb7"
+    },
+    "35": {
+      "numero": 35,
+      "nome": "Correntes Espectrais",
+      "tipo": "armadilha",
+      "raridade": "Incomum",
+      "chance": 12.5,
+      "chance_monstro": null,
+      "imagem": null,
+      "descricao": "Correntes invisíveis prendem o atacante no lugar, impedindo seu avanço.",
+      "efeito": "Cancele o ataque. O monstro não pode atacar neste turno.",
+      "gatilho": "Quando um monstro do oponente declarar ataque.",
+      "ataque": null,
+      "defesa": null,
+      "estrelas": null,
+      "carta_id": "1484dc74"
+    },
+    "36": {
+      "numero": 36,
+      "nome": "Explosão de Ossos",
+      "tipo": "armadilha",
+      "raridade": "Rara",
+      "chance": 7.5,
+      "chance_monstro": null,
+      "imagem": null,
+      "descricao": "Uma enxurrada de ossos afiados despedaça qualquer atacante despreparado.",
+      "efeito": "Destrua o monstro atacante.",
+      "gatilho": "Quando um monstro do oponente declarar ataque.",
+      "ataque": null,
+      "defesa": null,
+      "estrelas": null,
+      "carta_id": "cd6e3a9b"
+    },
+    "37": {
+      "numero": 37,
+      "nome": "Maldição do Túmulo",
+      "tipo": "armadilha",
+      "raridade": "Incomum",
+      "chance": 12.5,
+      "chance_monstro": null,
+      "imagem": null,
+      "descricao": "A maldição que protege os túmulos recai sobre os intrusos no momento de sua chegada.",
+      "efeito": "Reduza o ataque e a defesa do monstro invocado em 30 até o fim do turno.",
+      "gatilho": "Quando o oponente invocar um monstro.",
+      "ataque": null,
+      "defesa": null,
+      "estrelas": null,
+      "carta_id": "03c7624c"
+    },
+    "38": {
+      "numero": 38,
+      "nome": "Grito da Banshee",
+      "tipo": "armadilha",
+      "raridade": "Rara",
+      "chance": 7.5,
+      "chance_monstro": null,
+      "imagem": null,
+      "descricao": "O grito sobrenatural da banshee rompe qualquer encantamento antes que ele se complete.",
+      "efeito": "Cancele o efeito da carta ativada.",
+      "gatilho": "Quando o oponente ativar uma carta de efeito.",
+      "ataque": null,
+      "defesa": null,
+      "estrelas": null,
+      "carta_id": "b198ef62"
+    },
+    "39": {
+      "numero": 39,
+      "nome": "Contra-Ataque Espectral",
+      "tipo": "armadilha",
+      "raridade": "Rara",
+      "chance": 7.5,
+      "chance_monstro": null,
+      "imagem": null,
+      "descricao": "Mesmo na destruição, os servos da morte exigem seu tributo de sangue.",
+      "efeito": "Cause dano ao oponente igual à metade do ataque do monstro destruído (arredonde para baixo).",
+      "gatilho": "Quando um monstro seu for destruído em combate.",
+      "ataque": null,
+      "defesa": null,
+      "estrelas": null,
+      "carta_id": "b8c4e5a5"
+    },
+    "40": {
+      "numero": 40,
+      "nome": "Neblina Sombria",
+      "tipo": "armadilha",
+      "raridade": "Incomum",
+      "chance": 13,
+      "chance_monstro": null,
+      "imagem": null,
+      "descricao": "A neblina das trevas absorve parte da força do golpe, protegendo o senhor das sombras.",
+      "efeito": "Reduza o dano desse ataque à metade (arredonde para baixo).",
+      "gatilho": "Quando o oponente declarar um ataque direto aos seus pontos de vida.",
+      "ataque": null,
+      "defesa": null,
+      "estrelas": null,
+      "carta_id": "0c1edc5e"
+    }
+  }
+}
