@@ -1,0 +1,1143 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Necromante — Duelo</title>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/4.7.2/socket.io.min.js"></script>
+<style>
+  :root {
+    --bg:         #080810;
+    --bg-op:      #050518;
+    --bg-eu:      #120505;
+    --zona-op:    rgba(30,40,100,0.45);
+    --zona-eu:    rgba(100,20,20,0.45);
+    --borda-op:   #1e3a8a;
+    --borda-eu:   #7f1d1d;
+    --borda-slot-op: #2d4faa;
+    --borda-slot-eu: #aa2d2d;
+    --roxo:       #6b21a8;
+    --roxo-claro: #a855f7;
+    --texto:      #e2e8f0;
+    --texto2:     #94a3b8;
+    --card-w:     90px;
+    --card-h:     118px;
+    --card-w-mao: 76px;
+    --card-h-mao: 106px;
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+ 
+  body {
+    background: var(--bg);
+    color: var(--texto);
+    font-family: 'Segoe UI', sans-serif;
+    font-size: 13px;
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+  }
+ 
+  /* ── Lobby ── */
+  #lobby {
+    display: flex; flex-direction: column;
+    align-items: center; justify-content: center;
+    height: 100vh; gap: 14px;
+    background: radial-gradient(ellipse at center, #1a0a2e 0%, #080810 70%);
+  }
+  #lobby h1 { font-size: 32px; color: var(--roxo-claro); letter-spacing: 3px; text-shadow: 0 0 20px #a855f755; }
+  #lobby input {
+    background: #0d0d1a; border: 1px solid #2a2a4a;
+    color: var(--texto); padding: 10px 16px;
+    border-radius: 8px; width: 280px; font-size: 14px;
+  }
+  #lobby input:focus { outline: none; border-color: var(--roxo-claro); }
+  #lobby button {
+    background: var(--roxo); color: white; border: none;
+    padding: 11px 36px; border-radius: 8px; cursor: pointer;
+    font-size: 15px; font-weight: 600;
+    transition: background .2s, box-shadow .2s;
+  }
+  #lobby button:hover { background: var(--roxo-claro); box-shadow: 0 0 16px #a855f766; }
+  #lobby-msg { color: var(--texto2); font-size: 13px; }
+ 
+  #jogo { display: none; flex-direction: column; width: 100%; }
+  #jogo.ativo { display: flex; }
+ 
+  /* ── Status bar ── */
+  #status-bar {
+    position: sticky; top: 0; z-index: 50;
+    display: flex; justify-content: space-between; align-items: center;
+    background: #0a0a14; border-bottom: 1px solid #1e1e3a;
+    padding: 4px 16px; height: 44px;
+  }
+  .vida-bloco { display: flex; align-items: center; gap: 8px; }
+  .vida-nome { font-weight: 700; font-size: 12px; letter-spacing: 1px; text-transform: uppercase; }
+  .vida-num { font-size: 18px; font-weight: 700; color: var(--roxo-claro); min-width: 54px; text-align: center; }
+  .vida-bar { width: 120px; height: 6px; background: #1a1a2a; border-radius: 4px; overflow: hidden; }
+  .vida-fill { height: 100%; background: linear-gradient(90deg,#5b21b6,#a855f7); transition: width .4s; }
+  #fase-info { text-align: center; }
+  #fase-nome { font-size: 13px; font-weight: 700; color: var(--roxo-claro); }
+  #turno-info { font-size: 10px; color: var(--texto2); margin-top: 1px; }
+ 
+  /* ── Arena ── */
+  #arena {
+    flex-shrink: 0;
+    height: calc(100vh - 44px - 36px);
+    min-height: 400px;
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+  }
+ 
+  .lado {
+    flex: 1;
+    display: flex;
+    align-items: stretch;
+    padding: 6px 10px;
+    gap: 8px;
+    min-height: 0;
+    overflow: hidden;
+  }
+  .lado-op { background: var(--bg-op); }
+  .lado-eu { background: var(--bg-eu); border-top: 1px solid #3a1a1a; }
+ 
+  /* ── Lateral deck/cemitério ── */
+  .lateral {
+    display: flex; flex-direction: column;
+    align-items: center; justify-content: center;
+    gap: 8px; width: 68px; flex-shrink: 0;
+  }
+  .lateral-item {
+    width: 58px; min-height: 78px;
+    border-radius: 6px; display: flex;
+    flex-direction: column; align-items: center;
+    justify-content: center; gap: 3px;
+    font-size: 10px; font-weight: 600;
+    letter-spacing: 0.5px; text-transform: uppercase;
+  }
+  .lateral-item-op { border: 1px solid var(--borda-op); background: rgba(30,58,138,0.3); color: #93c5fd; }
+  .lateral-item-eu { border: 1px solid var(--borda-eu); background: rgba(127,29,29,0.3); color: #fca5a5; }
+  .lateral-item .count { font-size: 15px; font-weight: 700; }
+  .lateral-item .label { font-size: 9px; opacity: 0.8; }
+ 
+  /* ── Zonas ── */
+  .zonas {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
+    justify-content: center;
+    min-width: 0;
+    min-height: 0;
+  }
+  .zona {
+    display: flex; flex-direction: column; gap: 3px;
+    padding: 5px 8px; border-radius: 8px;
+    flex: 1; justify-content: center;
+  }
+  .zona-op { background: var(--zona-op); border: 1px solid #1e3a8a44; }
+  .zona-eu { background: var(--zona-eu); border: 1px solid #7f1d1d44; }
+  .zona-label {
+    font-size: 9px; font-weight: 600; letter-spacing: 1.5px;
+    text-transform: uppercase; opacity: 0.6; margin-bottom: 2px;
+  }
+  .zona-label-op { color: #93c5fd; }
+  .zona-label-eu { color: #fca5a5; }
+  .slots-row { display: flex; gap: 8px; justify-content: center; }
+ 
+  /* ── Carta slot ── */
+  .carta-slot {
+    width: var(--card-w);
+    height: var(--card-h);
+    border-radius: 8px; cursor: pointer;
+    position: relative; overflow: hidden;
+    transition: transform .12s, box-shadow .12s;
+    flex-shrink: 0;
+  }
+  .carta-slot-op { border: 1px solid var(--borda-slot-op); background: rgba(10,15,40,0.7); }
+  .carta-slot-eu { border: 1px solid var(--borda-slot-eu); background: rgba(30,8,8,0.7); }
+  .carta-slot.vazio { cursor: default; }
+  .carta-slot.vazio-eu { cursor: pointer; }
+  .carta-slot.vazio-eu:hover { transform: translateY(-3px); box-shadow: 0 4px 12px #7f1d1d66; }
+  .carta-slot:not(.vazio):hover { transform: translateY(-3px); box-shadow: 0 6px 16px #00000088; }
+  .carta-slot.selecionada { box-shadow: 0 0 0 2px #facc15, 0 0 16px #facc1566 !important; transform: translateY(-4px); }
+  .carta-slot.alvo-valido { box-shadow: 0 0 0 2px #4ade80, 0 0 12px #4ade8066 !important; }
+  .carta-slot.defesa { transform: rotate(90deg); }
+  .carta-slot.defesa:hover { transform: rotate(90deg) translateY(-3px); }
+  .carta-slot.defesa.selecionada { transform: rotate(90deg) translateY(-4px); }
+  .carta-slot.carta-ja-atacou { opacity: 0.5; }
+  .carta-slot.carta-recem { box-shadow: 0 0 0 2px #4ade8088; }
+ 
+  .vazio-plus {
+    height: 100%; display: flex; align-items: center;
+    justify-content: center; font-size: 28px; opacity: 0.15;
+    transition: opacity .15s;
+  }
+  .carta-slot.vazio-eu:hover .vazio-plus { opacity: 0.5; }
+ 
+  .carta-img { width: 100%; height: 100%; object-fit: cover; display: block; position: absolute; inset: 0; }
+  .carta-sem-img {
+    width: 100%; height: 100%;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 34px; background: #0a0a14;
+    position: absolute; inset: 0;
+  }
+  .carta-info {
+    position: absolute; bottom: 0; left: 0; right: 0;
+    padding: 3px 4px 4px;
+    background: linear-gradient(transparent, #000000dd 60%);
+  }
+  .carta-nome { font-weight: 600; font-size: 9px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+  .carta-stats { font-size: 9px; color: #cbd5e1; margin-top: 1px; }
+  .carta-badge {
+    position: absolute; top: 3px; right: 3px;
+    background: #000000aa; border-radius: 3px;
+    padding: 1px 3px; font-size: 8px; color: #4ade80;
+  }
+  .carta-tipo-monstro        { border-color: #7f1d1d !important; }
+  .carta-tipo-monstro_efeito { border-color: #4c1d95 !important; }
+  .carta-tipo-efeito         { border-color: #78350f !important; }
+  .carta-tipo-armadilha      { border-color: #1e3a8a !important; }
+  .carta-facedown {
+    height: 100%;
+    background: radial-gradient(ellipse at 50% 30%, #0f3460 0%, #050518 100%);
+    display: flex; align-items: center; justify-content: center;
+    font-size: 40px;
+  }
+ 
+  /* Separador central */
+  #separador {
+    height: 2px; flex-shrink: 0;
+    background: linear-gradient(90deg, transparent, #2a1a4a, #4a1a1a, transparent);
+  }
+ 
+  /* ── Info jogador lateral ── */
+  .lado-info {
+    display: flex; flex-direction: column;
+    justify-content: center; gap: 4px;
+    width: 80px; flex-shrink: 0; text-align: center;
+  }
+  .lado-info-nome { font-size: 10px; font-weight: 700; text-transform: uppercase; letter-spacing: 1px; }
+  .lado-info-op { color: #93c5fd; }
+  .lado-info-eu { color: #fca5a5; }
+  .lado-info-turno { font-size: 9px; opacity: 0.7; }
+ 
+  #mao-container {
+    flex-shrink: 0;
+    height: 200px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: #0a0a0f;
+    border-top: 1px solid #1a1a2a;
+    border-bottom: 1px solid #1a1a2a;
+    padding: 8px 0;
+  }
+  #mao-label { display: none; }
+  #mao-cartas {
+    display: flex; gap: 8px;
+    overflow-x: auto;
+    height: 100%;
+    align-items: center;
+    padding: 0 16px;
+    max-width: 100vw;
+  }
+  #mao-cartas::-webkit-scrollbar { height: 4px; }
+  #mao-cartas::-webkit-scrollbar-thumb { background: #2a2a4a; border-radius: 2px; }
+ 
+  .carta-mao {
+    width: 120px; height: 174px;
+    border-radius: 9px; cursor: pointer; position: relative;
+    overflow: hidden; flex-shrink: 0;
+    transition: transform .12s, box-shadow .12s;
+    border: 1px solid #2a2a3a;
+    background: #0d0d1a;
+    box-shadow: 0 4px 20px #000000cc;
+  }
+  .carta-mao:hover { transform: translateY(-8px); box-shadow: 0 14px 28px #000000dd; }
+  .carta-mao.selecionada { box-shadow: 0 0 0 2px #facc15, 0 0 20px #facc1566; transform: translateY(-10px); }
+  .carta-mao .carta-img { width: 100%; height: 100%; object-fit: cover; display: block; position: absolute; inset: 0; }
+  .carta-mao .carta-sem-img { width: 100%; height: 100%; display: flex; align-items: center; justify-content: center; font-size: 40px; background: #0a0a14; position: absolute; inset: 0; }
+  .carta-mao .carta-info { position: absolute; bottom: 0; left: 0; right: 0; padding: 4px 6px 5px; background: linear-gradient(transparent, #000000f0 50%); }
+  .carta-mao .carta-nome { font-weight: 600; font-size: 10px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+  .carta-mao .carta-stats { font-size: 10px; color: #cbd5e1; margin-top: 2px; }
+ 
+  /* ── Ações ── */
+  #acoes {
+    position: sticky; bottom: 0; z-index: 50;
+    background: #080810ee;
+    border-top: 1px solid #1e1e3a;
+    padding: 4px 10px;
+    display: flex; gap: 6px;
+    align-items: center; flex-wrap: nowrap;
+    height: 36px;
+    backdrop-filter: blur(8px);
+  }
+  .btn {
+    background: #12122a; border: 1px solid #2a2a4a;
+    color: var(--texto); padding: 4px 10px; border-radius: 5px;
+    cursor: pointer; font-size: 11px; white-space: nowrap;
+    transition: background .15s, border-color .15s;
+  }
+  .btn:hover { background: #1a1a3a; border-color: var(--roxo-claro); }
+  .btn:disabled { opacity: .35; cursor: default; }
+  .btn:disabled:hover { background: #12122a; border-color: #2a2a4a; }
+  .btn-primary { background: var(--roxo); border-color: var(--roxo); }
+  .btn-primary:hover { background: var(--roxo-claro); border-color: var(--roxo-claro); }
+  .btn-danger { background: #7f1d1d; border-color: #7f1d1d; }
+  .btn-danger:hover { background: #991b1b; }
+  .btn-ok { background: #166534; border-color: #166534; }
+  .btn-ok:hover { background: #15803d; }
+  #instrucao { color: var(--texto2); font-size: 11px; flex: 1; min-width: 0; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+ 
+  /* ── Log ── */
+  #log-container {
+    position: fixed;
+    bottom: 40px;
+    left: 6px;
+    width: 260px;
+    max-height: 80px;
+    overflow-y: auto;
+    background: #06060ecc;
+    border: 1px solid #1a1a2a;
+    border-radius: 6px;
+    padding: 4px 8px;
+    z-index: 25;
+    pointer-events: none;
+    backdrop-filter: blur(6px);
+  }
+  .log-linha { font-size: 10px; color: #475569; padding: 1px 0; line-height: 1.3; }
+  .log-linha:last-child { color: #94a3b8; }
+  #log-container::-webkit-scrollbar { width: 3px; }
+  #log-container::-webkit-scrollbar-thumb { background: #2a2a4a; border-radius: 2px; }
+ 
+  /* ── Overlay ── */
+  #overlay {
+    display: none; position: fixed; inset: 0;
+    background: #000000cc; z-index: 100;
+    align-items: center; justify-content: center;
+  }
+  #overlay.ativo { display: flex; }
+  #overlay-box {
+    background: #0d0d1a; border: 1px solid #2a2a5a;
+    border-radius: 12px; padding: 24px;
+    max-width: 380px; width: 90%; text-align: center;
+    box-shadow: 0 0 40px #00000099;
+  }
+  #overlay-titulo { font-size: 18px; font-weight: 700; margin-bottom: 8px; color: var(--roxo-claro); }
+  #overlay-msg { color: var(--texto2); margin-bottom: 16px; font-size: 13px; white-space: pre-line; }
+  #overlay-btns { display: flex; gap: 8px; justify-content: center; flex-wrap: wrap; }
+ 
+  /* ── Tooltip ── */
+  #tooltip {
+    display: none; position: fixed;
+    background: #0d0d1a; border: 1px solid #2a2a5a;
+    border-radius: 8px; padding: 10px 12px;
+    max-width: 230px; z-index: 200; font-size: 11px;
+    pointer-events: none; box-shadow: 0 8px 24px #000000aa;
+  }
+  #tooltip .t-nome { font-weight: 700; font-size: 13px; margin-bottom: 5px; color: var(--roxo-claro); }
+  #tooltip .t-campo { margin-bottom: 2px; color: var(--texto2); }
+  #tooltip .t-campo span { color: var(--texto); }
+ 
+  /* ── Fim de jogo ── */
+  #fim-de-jogo {
+    display: none; position: fixed; inset: 0;
+    background: #000000f2; z-index: 300;
+    align-items: center; justify-content: center;
+    flex-direction: column; gap: 12px;
+    padding: 24px;
+  }
+  #fim-de-jogo.ativo { display: flex; }
+  #fim-titulo { font-size: 48px; font-weight: 700; color: var(--roxo-claro); text-shadow: 0 0 30px #a855f7; }
+  #fim-sub { font-size: 18px; color: var(--texto2); }
+  #fim-historico-wrap {
+    width: 100%; max-width: 560px; max-height: 45vh;
+    background: #0d0d1a; border: 1px solid #2a2a4a; border-radius: 8px;
+    overflow-y: auto; padding: 12px 14px;
+  }
+  #fim-historico-titulo {
+    font-size: 12px; font-weight: 700; letter-spacing: 2px;
+    color: var(--roxo-claro); text-transform: uppercase; margin-bottom: 8px;
+  }
+  .fim-log-linha {
+    font-size: 11px; color: #94a3b8; padding: 2px 0;
+    border-bottom: 1px solid #1e1e3a; line-height: 1.5;
+  }
+  .fim-log-linha:last-child { border-bottom: none; }
+  .fim-log-linha.destaque { color: #e2e8f0; font-weight: 600; }
+  #fim-historico-wrap::-webkit-scrollbar { width: 4px; }
+  #fim-historico-wrap::-webkit-scrollbar-thumb { background: #2a2a4a; border-radius: 2px; }
+  #fim-acoes {
+    display: flex; gap: 10px; flex-wrap: wrap; justify-content: center;
+  }
+ 
+  #mao-status { color: var(--texto2); font-size: 11px; }
+</style>
+</head>
+<body>
+ 
+<!-- Lobby -->
+<div id="lobby">
+  <h1>☠ NECROMANTE</h1>
+  <p style="color:var(--texto2);letter-spacing:2px;font-size:12px">JOGO DE CARTAS</p>
+  <input id="inp-discord-id" type="number" placeholder="Seu Discord ID (número)">
+  <input id="inp-nome" type="text" placeholder="Seu nome">
+  <input id="inp-sala" type="text" placeholder="Código da sala (ex: duelo1)">
+  <button onclick="entrarSala()">Entrar na Sala</button>
+  <p id="lobby-msg"></p>
+</div>
+ 
+<!-- Jogo -->
+<div id="jogo">
+ 
+  <!-- Status -->
+  <div id="status-bar">
+    <div class="vida-bloco">
+      <div class="vida-nome" id="nome-op" style="color:#93c5fd">Oponente</div>
+      <div class="vida-bar"><div class="vida-fill" id="bar-op" style="width:100%"></div></div>
+      <div class="vida-num" id="vida-op">1000</div>
+    </div>
+    <div id="fase-info">
+      <div id="fase-nome">—</div>
+      <div id="turno-info"></div>
+      <div style="margin-top:3px">
+        <button class="btn" onclick="abrirCatalogo()" style="font-size:10px;padding:2px 8px;">📖 Catálogo</button>
+      </div>
+    </div>
+    <div class="vida-bloco">
+      <div class="vida-num" id="vida-eu">1000</div>
+      <div class="vida-bar"><div class="vida-fill" id="bar-eu" style="width:100%"></div></div>
+      <div class="vida-nome" id="nome-eu" style="color:#fca5a5">Você</div>
+      <span id="mao-status" style="margin-left:6px">🂠<span id="mao-count">0</span></span>
+    </div>
+  </div>
+ 
+  <!-- Arena -->
+  <div id="arena">
+ 
+    <!-- Lado oponente -->
+    <div class="lado lado-op">
+      <div class="lateral">
+        <div class="lateral-item lateral-item-op">
+          <div class="count" id="cem-op">0</div>
+          <div class="label">Cem.</div>
+        </div>
+        <div class="lateral-item lateral-item-op" style="min-height:52px">
+          <div class="count" style="font-size:12px" id="mao-op-count">0</div>
+          <div class="label">Mão</div>
+        </div>
+      </div>
+ 
+      <div class="zonas">
+        <div class="zona zona-op">
+          <div class="zona-label zona-label-op">Zona de Efeitos e Armadilhas</div>
+          <div class="slots-row" id="campo-efeito-op"></div>
+        </div>
+        <div class="zona zona-op">
+          <div class="zona-label zona-label-op">Zona de Monstros</div>
+          <div class="slots-row" id="campo-monstro-op"></div>
+        </div>
+      </div>
+ 
+      <div class="lateral">
+        <div class="lateral-item lateral-item-op" style="background:radial-gradient(ellipse,#0f3460,#050518);">
+          <div style="font-size:28px">🂠</div>
+          <div class="count" id="deck-op">0</div>
+          <div class="label">Deck</div>
+        </div>
+      </div>
+ 
+      <div class="lado-info">
+        <div class="lado-info-nome lado-info-op" id="label-op">Oponente</div>
+        <div class="lado-info-turno" id="turno-op-label"></div>
+      </div>
+    </div>
+ 
+    <div id="separador"></div>
+ 
+    <!-- Lado eu -->
+    <div class="lado lado-eu">
+      <div class="lado-info">
+        <div class="lado-info-nome lado-info-eu" id="label-eu">Você</div>
+        <div class="lado-info-turno" id="turno-eu-label"></div>
+      </div>
+ 
+      <div class="lateral">
+        <div class="lateral-item lateral-item-eu" style="background:radial-gradient(ellipse,#3d0000,#120505);">
+          <div style="font-size:28px">🂠</div>
+          <div class="count" id="deck-eu">0</div>
+          <div class="label">Deck</div>
+        </div>
+      </div>
+ 
+      <div class="zonas">
+        <div class="zona zona-eu">
+          <div class="zona-label zona-label-eu">Zona de Monstros</div>
+          <div class="slots-row" id="campo-monstro-eu"></div>
+        </div>
+        <div class="zona zona-eu">
+          <div class="zona-label zona-label-eu">Zona de Efeitos e Armadilhas</div>
+          <div class="slots-row" id="campo-efeito-eu"></div>
+        </div>
+      </div>
+ 
+      <div class="lateral">
+        <div class="lateral-item lateral-item-eu">
+          <div class="count" id="cem-eu">0</div>
+          <div class="label">Cem.</div>
+        </div>
+      </div>
+    </div>
+ 
+  </div>
+ 
+  <!-- Mão -->
+  <div id="mao-container">
+    <div id="mao-label">Mão</div>
+    <div id="mao-cartas"></div>
+  </div>
+ 
+  <!-- Ações -->
+  <div id="acoes">
+    <span id="instrucao">Aguardando...</span>
+    <button class="btn btn-primary" id="btn-batalha"    onclick="avancarFase()" disabled>⚔ Batalha</button>
+    <button class="btn btn-primary" id="btn-principal2" onclick="avancarFase()" disabled>📋 Fase 2</button>
+    <button class="btn btn-danger"  id="btn-encerrar"   onclick="avancarFase()" disabled>⏭ Encerrar</button>
+    <button class="btn"             id="btn-cancelar"   onclick="cancelarSelecao()">✕</button>
+  </div>
+ 
+  <!-- Log -->
+  <div id="log-container"><div id="log"></div></div>
+ 
+</div>
+ 
+<!-- Catálogo -->
+<div id="catalogo-modal" style="display:none;position:fixed;inset:0;background:#000000dd;z-index:200;overflow-y:auto;">
+  <div style="max-width:1100px;margin:0 auto;padding:20px 16px 40px;">
+    <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:16px;position:sticky;top:0;background:#080810;padding:10px 0;z-index:10;border-bottom:1px solid #2a2a4a;">
+      <h2 style="color:#a855f7;font-size:20px;letter-spacing:2px;">📖 CATÁLOGO DE CARTAS</h2>
+      <button class="btn btn-danger" onclick="fecharCatalogo()">✕ Fechar</button>
+    </div>
+    <div style="display:flex;gap:8px;flex-wrap:wrap;margin-bottom:16px;">
+      <button class="btn btn-primary" id="filtro-todos" onclick="filtrarCatalogo('todos')">Todos</button>
+      <button class="btn" id="filtro-monstro" onclick="filtrarCatalogo('monstro')">💀 Monstros</button>
+      <button class="btn" id="filtro-monstro_efeito" onclick="filtrarCatalogo('monstro_efeito')">💜 Monstros c/ Efeito</button>
+      <button class="btn" id="filtro-efeito" onclick="filtrarCatalogo('efeito')">✨ Efeitos</button>
+      <button class="btn" id="filtro-armadilha" onclick="filtrarCatalogo('armadilha')">🔵 Armadilhas</button>
+    </div>
+    <div id="catalogo-grid" style="display:grid;grid-template-columns:repeat(auto-fill,minmax(160px,1fr));gap:12px;"></div>
+  </div>
+</div>
+ 
+<!-- Overlay -->
+<div id="overlay">
+  <div id="overlay-box">
+    <div id="overlay-titulo"></div>
+    <div id="overlay-msg"></div>
+    <div id="overlay-btns"></div>
+  </div>
+</div>
+ 
+<!-- Fim de jogo -->
+<div id="fim-de-jogo">
+  <div id="fim-titulo">🏆</div>
+  <div id="fim-sub"></div>
+  <div id="fim-historico-wrap">
+    <div id="fim-historico-titulo">📜 Histórico da Partida</div>
+    <div id="fim-historico"></div>
+  </div>
+  <div id="fim-acoes">
+    <button class="btn btn-primary" onclick="location.reload()">Jogar Novamente</button>
+    <button class="btn" onclick="copiarHistorico()">📋 Copiar Histórico</button>
+  </div>
+</div>
+ 
+<!-- Tooltip -->
+<div id="tooltip"></div>
+ 
+<script>
+const socket = io();
+let estado = null, meuIdx = null, salaId = null, catalogo = {};
+let modoAcao = null;
+let cartaSelecionadaMao = null;
+let monstroAtacanteCampo = null;
+let efeitoCampoSelecionado = null;
+let descartarFimCount = 0, descartarFimSelecionados = [];
+let sacrificiosSelecionados = [];
+ 
+const VIDA_MAX = 1000; // alterado de 1500 para 1000
+ 
+// ── Conexão ──
+function entrarSala() {
+  const discordId = document.getElementById('inp-discord-id').value.trim();
+  const nome      = document.getElementById('inp-nome').value.trim();
+  const sala      = document.getElementById('inp-sala').value.trim();
+  if (!discordId || !nome || !sala) { document.getElementById('lobby-msg').textContent = 'Preencha todos os campos.'; return; }
+  salaId = sala;
+  socket.emit('entrar_sala', { sala_id: sala, discord_id: discordId, nome });
+}
+socket.on('aguardando', d => { document.getElementById('lobby-msg').textContent = d.msg; });
+socket.on('erro', d => { adicionarLog('⚠️ ' + d.msg); });
+ 
+fetch('/api/catalogo').then(r => r.json()).then(c => { catalogo = c; });
+ 
+socket.on('estado', e => {
+  estado = e; meuIdx = e.meu_indice;
+  document.getElementById('lobby').style.display = 'none';
+  document.getElementById('jogo').classList.add('ativo');
+  if (e.pendente && e.pendente.tipo === 'lich_supremo' && e.pendente.dono_idx === e.meu_indice) {
+    modoAcao = 'lich_supremo';
+    setInstrucao('⚡ Lich Supremo: clique em qualquer carta do campo do oponente para destruir.');
+  } else if (e.pendente && e.pendente.tipo === 'armadilha' && e.pendente.atacante_dono_idx === e.meu_indice) {
+    setInstrucao('⏳ Aguardando oponente decidir sobre a armadilha...');
+  }
+  renderizar();
+});
+ 
+// ── Render ──
+function renderizar() {
+  if (!estado) return;
+  const eu = estado.jogadores[meuIdx];
+  const op = estado.jogadores[1 - meuIdx];
+  const meuTurnoFlag = estado.turno === meuIdx;
+ 
+  document.getElementById('vida-eu').textContent = eu.vida;
+  document.getElementById('vida-op').textContent = op.vida;
+  document.getElementById('nome-eu').textContent = eu.nome;
+  document.getElementById('nome-op').textContent = op.nome;
+  document.getElementById('bar-eu').style.width = Math.max(0, eu.vida / VIDA_MAX * 100) + '%';
+  document.getElementById('bar-op').style.width = Math.max(0, op.vida / VIDA_MAX * 100) + '%';
+ 
+  const subfases = { compra:'🂠 Compra', principal1:'📋 Fase Principal 1', batalha:'⚔️ Batalha', principal2:'📋 Fase Principal 2', fim:'⏭ Fim de Turno' };
+  document.getElementById('fase-nome').textContent = subfases[estado.subfase] || estado.subfase;
+  document.getElementById('turno-info').textContent = meuTurnoFlag ? 'Sua vez' : `Vez de ${op.nome}`;
+ 
+  document.getElementById('label-eu').textContent = eu.nome;
+  document.getElementById('label-op').textContent = op.nome;
+  document.getElementById('turno-eu-label').textContent = meuTurnoFlag ? '← SEU TURNO' : '';
+  document.getElementById('turno-op-label').textContent = !meuTurnoFlag ? '← TURNO DELE' : '';
+ 
+  document.getElementById('deck-eu').textContent = eu.deck ? eu.deck.length : 0;
+  document.getElementById('cem-eu').textContent  = eu.cemiterio ? eu.cemiterio.length : 0;
+  document.getElementById('deck-op').textContent = op.deck ? op.deck.length : 0;
+  document.getElementById('cem-op').textContent  = op.cemiterio ? op.cemiterio.length : 0;
+  document.getElementById('mao-op-count').textContent = op.mao_count !== undefined ? op.mao_count : 0;
+  document.getElementById('mao-count').textContent = (eu.mao || []).length;
+ 
+  renderCampo('campo-monstro-op', op.campo_monstro, false, 'monstro');
+  renderCampo('campo-efeito-op',  op.campo_efeito,  false, 'efeito');
+  renderCampo('campo-monstro-eu', eu.campo_monstro, true,  'monstro');
+  renderCampo('campo-efeito-eu',  eu.campo_efeito,  true,  'efeito');
+  renderMao(eu.mao || []);
+ 
+  const isP1 = estado.subfase === 'principal1', isP2 = estado.subfase === 'principal2';
+  const isBt = estado.subfase === 'batalha',    isFm = estado.subfase === 'fim';
+  document.getElementById('btn-batalha').disabled    = !(meuTurnoFlag && isP1);
+  document.getElementById('btn-principal2').disabled = !(meuTurnoFlag && isBt);
+  document.getElementById('btn-encerrar').disabled   = !(meuTurnoFlag && (isP2 || isFm));
+ 
+  if (modoAcao) return;
+  const invocacoesUsadas = eu.invocacoes || 0;
+  const invRestantes = Math.max(0, 2 - invocacoesUsadas);
+  if (meuTurnoFlag && (isP1 || isP2)) {
+    setInstrucao(`Invocações restantes: ${invRestantes}/2 — Clique em uma carta na mão para jogar.`);
+  } else if (meuTurnoFlag && isBt) {
+    setInstrucao('Selecione um monstro seu para atacar.');
+  } else if (!meuTurnoFlag) {
+    setInstrucao(`Aguardando ${op.nome}...`);
+  }
+ 
+  renderLog();
+}
+ 
+function renderLog() {
+  const log = estado && estado.log ? estado.log : [];
+  document.getElementById('log').innerHTML = log.map(l => `<div class="log-linha">${escHtml(l)}</div>`).join('');
+  document.getElementById('log-container').scrollTop = 99999;
+}
+ 
+function adicionarLog(msg) {
+  if (!estado) return;
+  estado.log = estado.log || [];
+  estado.log.push(msg);
+  renderLog();
+}
+ 
+function renderCampo(containerId, slots, euDono, tipoFileira) {
+  const c = document.getElementById(containerId);
+  c.innerHTML = '';
+  for (let i = 0; i < 4; i++) {
+    c.appendChild(criarSlotCampo(slots ? slots[i] : null, i, euDono, tipoFileira));
+  }
+}
+ 
+function criarSlotCampo(carta, idx, euDono, tipoFileira) {
+  const div = document.createElement('div');
+  div.className = 'carta-slot ' + (euDono ? 'carta-slot-eu' : 'carta-slot-op');
+ 
+  if (!carta) {
+    if (euDono) {
+      div.classList.add('vazio-eu');
+      div.onclick = () => onClickCampoVazioEu(idx, tipoFileira);
+      div.innerHTML = `<div class="vazio-plus">${tipoFileira === 'monstro' ? '⚔' : '✦'}</div>`;
+    } else {
+      div.classList.add('vazio');
+      div.onclick = () => { if (modoAcao === 'selecionar_alvo') tentarAtaqueDireto(); };
+    }
+    return div;
+  }
+ 
+  if (carta.tipo) div.classList.add(`carta-tipo-${carta.tipo}`);
+  if (carta.posicao === 'defesa') div.classList.add('defesa');
+  if (carta.recem_invocado) div.classList.add('carta-recem');
+  if (euDono && carta.carta_id && estado && estado.jogadores[meuIdx].ja_atacou.includes(carta.carta_id)) div.classList.add('carta-ja-atacou');
+  if (euDono && tipoFileira === 'monstro' && monstroAtacanteCampo === idx) div.classList.add('selecionada');
+  if (euDono && tipoFileira === 'efeito'  && efeitoCampoSelecionado === idx) div.classList.add('selecionada');
+ 
+  if (carta.nome === '???' || (!carta.revelada && carta.tipo === 'armadilha' && !euDono)) {
+    div.innerHTML = `<div class="carta-facedown">🂠</div>`;
+  } else {
+    const imgNome = carta.nome ? carta.nome + '.png' : null;
+    const atk = (carta.ataque || 0) + (carta.ataque_bonus || 0);
+    const def = (carta.defesa || 0) + (carta.defesa_bonus || 0);
+    div.innerHTML = `
+      ${imgNome ? `<img class="carta-img" src="/imagens/${encodeURIComponent(imgNome)}" onerror="this.style.display='none';this.nextElementSibling.style.display='flex'">
+      <div class="carta-sem-img" style="display:none">${tipoEmoji(carta.tipo)}</div>`
+      : `<div class="carta-sem-img">${tipoEmoji(carta.tipo)}</div>`}
+      <div class="carta-info">
+        <div class="carta-nome">${escHtml(carta.nome || '?')}</div>
+        ${carta.ataque != null ? `<div class="carta-stats">⚔${atk} 🛡${def}</div>` : ''}
+        ${carta.estrelas ? `<div class="carta-stats">${'⭐'.repeat(carta.estrelas)}</div>` : ''}
+      </div>
+      ${carta.ataque_bonus ? `<div class="carta-badge">+${carta.ataque_bonus}</div>` : ''}
+    `;
+  }
+ 
+  div.onmouseenter = e => mostrarTooltip(e, carta);
+  div.onmouseleave = esconderTooltip;
+  if (euDono && tipoFileira === 'monstro') div.onclick = () => onClickMonstroEuFinal(idx);
+  if (euDono && tipoFileira === 'efeito')  div.onclick = () => onClickEfeitoEu(idx);
+  if (!euDono && tipoFileira === 'monstro') div.onclick = () => onClickMonstroOp(idx);
+  if (!euDono && tipoFileira === 'efeito')  div.onclick = () => onClickEfeitoOp(idx);
+  return div;
+}
+ 
+function renderMao(mao) {
+  const c = document.getElementById('mao-cartas');
+  c.innerHTML = '';
+  document.getElementById('mao-count').textContent = mao.length;
+  mao.forEach((carta, i) => {
+    const div = document.createElement('div');
+    div.className = 'carta-mao';
+    if (carta.tipo) div.classList.add(`carta-tipo-${carta.tipo}`);
+    if (cartaSelecionadaMao === i) div.classList.add('selecionada');
+    if (modoAcao === 'descartar_fim_turno' && descartarFimSelecionados.includes(i)) div.classList.add('selecionada');
+    const imgNome = carta.nome ? carta.nome + '.png' : null;
+    const atk = (carta.ataque || 0) + (carta.ataque_bonus || 0);
+    const def = (carta.defesa || 0) + (carta.defesa_bonus || 0);
+    div.innerHTML = `
+      ${imgNome ? `<img class="carta-img" src="/imagens/${encodeURIComponent(imgNome)}" onerror="this.style.display='none';this.nextElementSibling.style.display='flex'">
+      <div class="carta-sem-img" style="display:none">${tipoEmoji(carta.tipo)}</div>`
+      : `<div class="carta-sem-img">${tipoEmoji(carta.tipo)}</div>`}
+      <div class="carta-info">
+        <div class="carta-nome">${escHtml(carta.nome || '?')}</div>
+        ${carta.ataque != null ? `<div class="carta-stats">⚔${atk} 🛡${def}</div>` : ''}
+        ${carta.estrelas ? `<div class="carta-stats">${'⭐'.repeat(carta.estrelas)}</div>` : ''}
+        ${carta.tipo === 'efeito' ? `<div class="carta-stats" style="color:#f59e0b">Efeito</div>` : ''}
+        ${carta.tipo === 'armadilha' ? `<div class="carta-stats" style="color:#60a5fa">Armadilha</div>` : ''}
+      </div>
+    `;
+    div.onmouseenter = e => mostrarTooltip(e, carta);
+    div.onmouseleave = esconderTooltip;
+    div.onclick = () => onClickCartaMao(i);
+    c.appendChild(div);
+  });
+}
+ 
+// ── Interações ──
+function meuTurno() { return estado && estado.turno === meuIdx; }
+ 
+function onClickCartaMao(idx) {
+  if (modoAcao === 'descartar_fim_turno') {
+    const pos = descartarFimSelecionados.indexOf(idx);
+    if (pos >= 0) descartarFimSelecionados.splice(pos, 1);
+    else if (descartarFimSelecionados.length < descartarFimCount) descartarFimSelecionados.push(idx);
+    renderizar();
+    if (descartarFimSelecionados.length === descartarFimCount) {
+      socket.emit('descartar_mao_fim_turno', { sala_id: salaId, indices: descartarFimSelecionados });
+      modoAcao = null; descartarFimSelecionados = [];
+    }
+    return;
+  }
+  if (!meuTurno()) return;
+  if (estado.subfase !== 'principal1' && estado.subfase !== 'principal2') return;
+  const carta = estado.jogadores[meuIdx].mao[idx];
+  if (!carta) return;
+  if (cartaSelecionadaMao === idx) { cancelarSelecao(); return; }
+  cartaSelecionadaMao = idx;
+ 
+  if (carta.tipo === 'monstro' || carta.tipo === 'monstro_efeito') {
+    const nivel = carta.estrelas || 1;
+    const necessario = Math.max(0, nivel - 1);
+    if (necessario === 0) {
+      modoAcao = 'colocar_monstro';
+      setInstrucao(`Escolha um espaço de monstro vazio para invocar ${carta.nome}.`);
+    } else {
+      modoAcao = 'selecionar_sacrificio';
+      setInstrucao(`Selecione monstros no campo para sacrificar (precisa ${necessario}⭐). Obs: monstros recém-invocados não podem ser sacrificados.`);
+    }
+  } else if (carta.tipo === 'efeito' || carta.tipo === 'armadilha') {
+    modoAcao = 'colocar_efeito';
+    setInstrucao(`Escolha um espaço de efeito/armadilha para posicionar ${carta.nome}.`);
+  }
+  renderizar();
+}
+ 
+function somaSacrSelecionados() {
+  const campo = estado.jogadores[meuIdx].campo_monstro;
+  return sacrificiosSelecionados.reduce((acc, i) => acc + (campo[i] ? (campo[i].estrelas || 1) : 0), 0);
+}
+ 
+function onClickMonstroEu(idx) {
+  if (modoAcao === 'selecionar_sacrificio') {
+    const carta = estado.jogadores[meuIdx].campo_monstro[idx];
+    if (!carta) return;
+    if (carta.recem_invocado) {
+      adicionarLog(`⚠️ ${carta.nome} foi invocado neste turno e não pode ser sacrificado.`);
+      return;
+    }
+    const pos = sacrificiosSelecionados.indexOf(idx);
+    if (pos >= 0) sacrificiosSelecionados.splice(pos, 1);
+    else sacrificiosSelecionados.push(idx);
+    const cartaMao = estado.jogadores[meuIdx].mao[cartaSelecionadaMao];
+    const necessario = Math.max(0, (cartaMao.estrelas || 1) - 1);
+    const somou = somaSacrSelecionados();
+    setInstrucao(`Sacrifícios: ${somou}/${necessario}⭐. ${somou >= necessario ? 'Agora escolha um espaço vazio.' : ''}`);
+    if (somou >= necessario) { modoAcao = 'colocar_monstro'; renderizar(); }
+    else renderizar();
+    return;
+  }
+  if (!meuTurno()) return;
+  if (estado.subfase === 'batalha') {
+    const slot = estado.jogadores[meuIdx].campo_monstro[idx];
+    if (!slot) return;
+    if (slot.posicao === 'defesa') { adicionarLog('⚠️ Monstro em defesa não pode atacar.'); return; }
+    if (estado.jogadores[meuIdx].ja_atacou.includes(slot.carta_id)) { adicionarLog('⚠️ Esse monstro já atacou.'); return; }
+    monstroAtacanteCampo = idx;
+    modoAcao = 'selecionar_alvo';
+    setInstrucao(`Selecione o alvo do ataque. Clique em espaço vazio op para ataque direto.`);
+    renderizar();
+    return;
+  }
+  if (estado.subfase === 'principal1' || estado.subfase === 'principal2') {
+    const slot = estado.jogadores[meuIdx].campo_monstro[idx];
+    if (!slot) return;
+    mostrarOverlay('🔄 Mudar Posição', `Colocar ${slot.nome} em modo ${slot.posicao === 'ataque' ? 'defesa' : 'ataque'}?`, [
+      { label: 'Sim', cls: 'btn-ok', fn: () => { socket.emit('mudar_posicao', { sala_id: salaId, campo_idx: idx }); fecharOverlay(); } },
+      { label: 'Cancelar', cls: '', fn: fecharOverlay },
+    ]);
+  }
+}
+ 
+function onClickMonstroEuFinal(idx) {
+  if (modoAcao === 'ativar_efeito_campo_alvo') { onMonstroEuParaEfeito(idx); return; }
+  onClickMonstroEu(idx);
+}
+ 
+function onClickEfeitoEu(idx) {
+  if (!meuTurno()) return;
+  if (estado.subfase !== 'principal1' && estado.subfase !== 'principal2') return;
+  const slot = estado.jogadores[meuIdx].campo_efeito[idx];
+  if (!slot || (slot.tipo !== 'efeito' && slot.tipo !== 'armadilha')) return;
+  if (slot.tipo === 'armadilha') {
+    mostrarOverlay('🪤 Armadilha: ' + slot.nome, slot.efeito || '', [
+      { label: 'Descartar (compra 1)', cls: 'btn-danger', fn: () => { socket.emit('descartar_voluntario', { sala_id: salaId, campo_idx: idx }); fecharOverlay(); } },
+      { label: 'Cancelar', cls: '', fn: fecharOverlay },
+    ]);
+    return;
+  }
+  const precisaAlvo = ['732143f8', 'b1c26eb1', '6f3a5f32'];
+  if (precisaAlvo.includes(slot.carta_id)) {
+    mostrarOverlay('📜 Ativar Efeito', `${slot.nome}\n${slot.efeito || ''}`, [
+      { label: 'Ativar', cls: 'btn-primary', fn: () => {
+          fecharOverlay();
+          efeitoCampoSelecionado = idx;
+          modoAcao = 'ativar_efeito_campo_alvo';
+          setInstrucao(`Selecione um monstro seu como alvo para ${slot.nome}.`);
+          renderizar();
+      }},
+      { label: 'Cancelar', cls: '', fn: fecharOverlay },
+      { label: 'Descartar (compra 1)', cls: 'btn-danger', fn: () => { socket.emit('descartar_voluntario', { sala_id: salaId, campo_idx: idx }); fecharOverlay(); } },
+    ]);
+    return;
+  }
+  mostrarOverlay('📜 Ativar Efeito', `${slot.nome}\n${slot.efeito || ''}`, [
+    { label: 'Ativar', cls: 'btn-primary', fn: () => {
+        fecharOverlay();
+        if (slot.carta_id === '9d697ada') {
+          efeitoCampoSelecionado = idx;
+          modoAcao = 'explosao_arcana';
+          setInstrucao('💥 Selecione uma carta de efeito/armadilha do oponente para destruir.');
+          renderizar();
+        } else {
+          socket.emit('ativar_efeito_campo', { sala_id: salaId, campo_idx: idx });
+        }
+    }},
+    { label: 'Cancelar', cls: '', fn: fecharOverlay },
+    { label: 'Descartar (compra 1)', cls: 'btn-danger', fn: () => { socket.emit('descartar_voluntario', { sala_id: salaId, campo_idx: idx }); fecharOverlay(); } },
+  ]);
+}
+ 
+function onClickCampoVazioEu(idx, tipoFileira) {
+  if (!meuTurno()) return;
+  if (tipoFileira === 'monstro' && modoAcao === 'colocar_monstro') {
+    const carta = estado.jogadores[meuIdx].mao[cartaSelecionadaMao];
+    mostrarOverlay('⬆️ Invocar Monstro', `Invocar ${carta.nome} no espaço ${idx + 1}?`, [
+      { label: '⚔ Ataque', cls: 'btn-primary', fn: () => { socket.emit('invocar_monstro', { sala_id: salaId, mao_idx: cartaSelecionadaMao, campo_idx: idx, sacrificios: sacrificiosSelecionados, posicao: 'ataque' }); cancelarSelecao(); fecharOverlay(); } },
+      { label: '🛡 Defesa', cls: 'btn', fn: () => { socket.emit('invocar_monstro', { sala_id: salaId, mao_idx: cartaSelecionadaMao, campo_idx: idx, sacrificios: sacrificiosSelecionados, posicao: 'defesa' }); cancelarSelecao(); fecharOverlay(); } },
+      { label: 'Cancelar', cls: '', fn: () => { cancelarSelecao(); fecharOverlay(); } },
+    ]);
+  }
+  if (tipoFileira === 'efeito' && modoAcao === 'colocar_efeito') {
+    socket.emit('colocar_efeito', { sala_id: salaId, mao_idx: cartaSelecionadaMao, campo_idx: idx });
+    cancelarSelecao();
+  }
+}
+ 
+function onClickMonstroOp(idx) {
+  if (modoAcao === 'selecionar_alvo') { socket.emit('atacar', { sala_id: salaId, atacante_idx: monstroAtacanteCampo, alvo_idx: idx }); cancelarSelecao(); return; }
+  if (modoAcao === 'lich_supremo') { socket.emit('resolver_lich_supremo', { sala_id: salaId, tipo_alvo: 'monstro', alvo_idx: idx }); modoAcao = null; return; }
+}
+ 
+function onClickEfeitoOp(idx) {
+  if (modoAcao === 'lich_supremo') { socket.emit('resolver_lich_supremo', { sala_id: salaId, tipo_alvo: 'efeito', alvo_idx: idx }); modoAcao = null; return; }
+  if (modoAcao === 'explosao_arcana') {
+    const slot = estado.jogadores[1 - meuIdx].campo_efeito[idx];
+    if (!slot) return;
+    socket.emit('ativar_efeito_campo', { sala_id: salaId, campo_idx: efeitoCampoSelecionado, alvo: idx });
+    modoAcao = null; efeitoCampoSelecionado = null;
+    return;
+  }
+}
+ 
+function tentarAtaqueDireto() {
+  if (modoAcao !== 'selecionar_alvo') return;
+  socket.emit('atacar', { sala_id: salaId, atacante_idx: monstroAtacanteCampo, alvo_idx: -1 });
+  cancelarSelecao();
+}
+ 
+function onMonstroEuParaEfeito(idx) {
+  socket.emit('ativar_efeito_campo', { sala_id: salaId, campo_idx: efeitoCampoSelecionado, alvo: idx });
+  modoAcao = null; efeitoCampoSelecionado = null; cartaSelecionadaMao = null;
+}
+ 
+function avancarFase() {
+  if (!meuTurno()) return;
+  socket.emit('avancar_subfase', { sala_id: salaId });
+  cancelarSelecao();
+}
+ 
+function cancelarSelecao() {
+  modoAcao = null; cartaSelecionadaMao = null; monstroAtacanteCampo = null;
+  efeitoCampoSelecionado = null; sacrificiosSelecionados = [];
+  if (estado) {
+    const eu = estado.jogadores[meuIdx];
+    const op = estado.jogadores[1 - meuIdx];
+    const invRestantes = Math.max(0, 2 - (eu.invocacoes || 0));
+    if (estado.turno === meuIdx && (estado.subfase === 'principal1' || estado.subfase === 'principal2')) {
+      setInstrucao(`Invocações restantes: ${invRestantes}/2 — Clique em uma carta na mão para jogar.`);
+    } else if (estado.turno === meuIdx && estado.subfase === 'batalha') {
+      setInstrucao('Selecione um monstro seu para atacar.');
+    } else {
+      setInstrucao(`Aguardando ${op.nome}...`);
+    }
+  }
+  renderizar();
+}
+ 
+socket.on('ativar_armadilha', d => {
+  mostrarOverlay('🔔 Ativar Armadilha?', `${d.carta.nome}\nGatilho: ${d.carta.gatilho}\nEfeito: ${d.carta.efeito}`, [
+    { label: '✅ Ativar', cls: 'btn-primary', fn: () => { socket.emit('responder_armadilha', { sala_id: salaId, ativar: true }); fecharOverlay(); } },
+    { label: '❌ Não Ativar', cls: 'btn-danger', fn: () => { socket.emit('responder_armadilha', { sala_id: salaId, ativar: false }); fecharOverlay(); } },
+  ]);
+  setInstrucao('⏳ Oponente decidindo se ativa uma armadilha...');
+});
+ 
+socket.on('descartar_fim_turno', d => {
+  descartarFimCount = d.quantidade; descartarFimSelecionados = []; modoAcao = 'descartar_fim_turno';
+  setInstrucao(`⚠️ Descarte ${d.quantidade} carta(s) da mão para terminar o turno.`);
+  document.getElementById('btn-encerrar').disabled = true;
+  document.getElementById('btn-batalha').disabled = true;
+  document.getElementById('btn-principal2').disabled = true;
+  renderizar();
+});
+ 
+socket.on('fim_de_jogo', d => {
+  document.getElementById('fim-de-jogo').classList.add('ativo');
+  const vitoria = d.vencedor === (estado && estado.jogadores[meuIdx].nome);
+  document.getElementById('fim-titulo').textContent = vitoria ? '🏆 Vitória!' : '💀 Derrota';
+  document.getElementById('fim-sub').textContent = `${d.vencedor} venceu a partida!`;
+
+  // Renderiza histórico completo
+  const log = d.log || [];
+  const destaques = ['🏆', '⚔️', '💀', '🔒', '🌫️', '🪦', '👻', '🔔', '⚡', '▶', '🎲'];
+  const linhas = log.map(l => {
+    const ehDestaque = destaques.some(e => l.startsWith(e));
+    return `<div class="fim-log-linha${ehDestaque ? ' destaque' : ''}">${escHtml(l)}</div>`;
+  }).join('');
+  document.getElementById('fim-historico').innerHTML = linhas || '<div class="fim-log-linha">Sem histórico disponível.</div>';
+
+  // Scroll para o fim
+  const wrap = document.getElementById('fim-historico-wrap');
+  setTimeout(() => { wrap.scrollTop = wrap.scrollHeight; }, 50);
+});
+
+function copiarHistorico() {
+  const linhas = document.querySelectorAll('.fim-log-linha');
+  const texto = Array.from(linhas).map(l => l.textContent).join('\n');
+  navigator.clipboard.writeText(texto).then(() => {
+    const btn = document.querySelector('#fim-acoes .btn:last-child');
+    btn.textContent = '✅ Copiado!';
+    setTimeout(() => { btn.textContent = '📋 Copiar Histórico'; }, 2000);
+  });
+}
+ 
+// ── Overlay ──
+function mostrarOverlay(titulo, msg, botoes) {
+  document.getElementById('overlay-titulo').textContent = titulo;
+  document.getElementById('overlay-msg').textContent = msg;
+  const btns = document.getElementById('overlay-btns');
+  btns.innerHTML = '';
+  botoes.forEach(b => {
+    const el = document.createElement('button');
+    el.className = 'btn ' + (b.cls || '');
+    el.textContent = b.label;
+    el.onclick = b.fn;
+    btns.appendChild(el);
+  });
+  document.getElementById('overlay').classList.add('ativo');
+}
+function fecharOverlay() { document.getElementById('overlay').classList.remove('ativo'); }
+ 
+// ── Tooltip ──
+function mostrarTooltip(e, carta) {
+  if (!carta || carta.nome === '???') return;
+  const t = document.getElementById('tooltip');
+  let html = `<div class="t-nome">${escHtml(carta.nome || '?')}</div>`;
+  if (carta.tipo) html += `<div class="t-campo"><span>${tipoLabel(carta.tipo)}</span></div>`;
+  if (carta.raridade) html += `<div class="t-campo">Raridade: <span>${escHtml(carta.raridade)}</span></div>`;
+  if (carta.estrelas) html += `<div class="t-campo">Nível: <span>${'⭐'.repeat(carta.estrelas)}</span></div>`;
+  if (carta.ataque != null) {
+    const atk = (carta.ataque || 0) + (carta.ataque_bonus || 0), def = (carta.defesa || 0) + (carta.defesa_bonus || 0);
+    html += `<div class="t-campo">ATK: <span>${atk}</span>  DEF: <span>${def}</span></div>`;
+  }
+  if (carta.recem_invocado) html += `<div class="t-campo" style="color:#4ade80">✦ Invocado neste turno</div>`;
+  if (carta.descricao) html += `<div class="t-campo" style="margin-top:4px;font-style:italic;font-size:10px">${escHtml(carta.descricao)}</div>`;
+  if (carta.efeito)    html += `<div class="t-campo" style="margin-top:4px;color:#a78bfa">${escHtml(carta.efeito)}</div>`;
+  if (carta.gatilho)   html += `<div class="t-campo" style="color:#60a5fa">Gatilho: ${escHtml(carta.gatilho)}</div>`;
+  t.innerHTML = html;
+  t.style.display = 'block';
+  posicionarTooltip(e);
+}
+function posicionarTooltip(e) {
+  const t = document.getElementById('tooltip');
+  let x = e.clientX + 14, y = e.clientY + 14;
+  const r = t.getBoundingClientRect();
+  if (x + r.width > window.innerWidth) x = e.clientX - r.width - 14;
+  if (y + r.height > window.innerHeight) y = e.clientY - r.height - 14;
+  t.style.left = x + 'px'; t.style.top = y + 'px';
+}
+document.addEventListener('mousemove', e => { if (document.getElementById('tooltip').style.display === 'block') posicionarTooltip(e); });
+function esconderTooltip() { document.getElementById('tooltip').style.display = 'none'; }
+ 
+// ── Utils ──
+function tipoEmoji(t) { return { monstro: '💀', monstro_efeito: '💜', efeito: '✨', armadilha: '🔵' }[t] || '🂠'; }
+function tipoLabel(t) { return { monstro: 'Monstro', monstro_efeito: 'Monstro c/ Efeito', efeito: 'Efeito', armadilha: 'Armadilha' }[t] || t; }
+function setInstrucao(msg) { document.getElementById('instrucao').textContent = msg; }
+function escHtml(s) { return String(s || '').replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;'); }
+ 
+// ── Catálogo ──
+let filtroAtivo = 'todos';
+ 
+function abrirCatalogo() {
+  document.getElementById('catalogo-modal').style.display = 'block';
+  renderCatalogo();
+}
+ 
+function fecharCatalogo() {
+  document.getElementById('catalogo-modal').style.display = 'none';
+}
+ 
+function filtrarCatalogo(tipo) {
+  filtroAtivo = tipo;
+  ['todos', 'monstro', 'monstro_efeito', 'efeito', 'armadilha'].forEach(t => {
+    const btn = document.getElementById('filtro-' + t);
+    if (btn) btn.className = 'btn' + (t === tipo ? ' btn-primary' : '');
+  });
+  renderCatalogo();
+}
+ 
+function renderCatalogo() {
+  const grid = document.getElementById('catalogo-grid');
+  grid.innerHTML = '';
+ 
+  const cartas = Object.values(catalogo);
+  if (cartas.length === 0) {
+    grid.innerHTML = '<p style="color:#64748b;grid-column:1/-1;text-align:center;padding:40px">Carregando catálogo...</p>';
+    fetch('/api/catalogo').then(r => r.json()).then(c => { catalogo = c; renderCatalogo(); });
+    return;
+  }
+ 
+  const filtradas = filtroAtivo === 'todos' ? cartas : cartas.filter(c => c.tipo === filtroAtivo);
+  const ordem = { monstro: 1, monstro_efeito: 2, efeito: 3, armadilha: 4 };
+  filtradas.sort((a, b) => (ordem[a.tipo] || 9) - (ordem[b.tipo] || 9) || (a.nome || '').localeCompare(b.nome || ''));
+ 
+  filtradas.forEach(carta => {
+    const div = document.createElement('div');
+    div.style.cssText = 'border-radius:10px;overflow:hidden;cursor:pointer;transition:transform .15s,box-shadow .15s;position:relative;background:#0d0d1a;border:1px solid #2a2a3a;';
+    div.className = `carta-tipo-${carta.tipo}`;
+    const cores = { monstro: '#7f1d1d', monstro_efeito: '#4c1d95', efeito: '#78350f', armadilha: '#1e3a8a' };
+    const cor = cores[carta.tipo] || '#2a2a3a';
+    const atk = carta.ataque != null ? carta.ataque : null;
+    const def = carta.defesa != null ? carta.defesa : null;
+    const estrelas = carta.estrelas ? '⭐'.repeat(carta.estrelas) : '';
+    div.innerHTML = `
+      <div style="position:relative;width:100%;padding-top:140%;overflow:hidden;">
+        <img src="/imagens/${encodeURIComponent((carta.nome || '') + '.png')}"
+             style="position:absolute;inset:0;width:100%;height:100%;object-fit:cover;"
+             onerror="this.style.display='none';this.nextElementSibling.style.display='flex'">
+        <div style="display:none;position:absolute;inset:0;align-items:center;justify-content:center;font-size:48px;background:#0a0a14;">
+          ${tipoEmoji(carta.tipo)}
+        </div>
+        <div style="position:absolute;bottom:0;left:0;right:0;padding:6px 8px 8px;background:linear-gradient(transparent,#000000f5 45%);">
+          <div style="font-weight:700;font-size:11px;color:#f1f5f9;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;">${escHtml(carta.nome || '?')}</div>
+          ${estrelas ? `<div style="font-size:9px;margin-top:1px;">${estrelas}</div>` : ''}
+          ${atk != null ? `<div style="font-size:10px;color:#cbd5e1;margin-top:2px;">⚔ ${atk} &nbsp; 🛡 ${def}</div>` : ''}
+          <div style="font-size:9px;color:#94a3b8;margin-top:2px;">${tipoLabel(carta.tipo)}</div>
+        </div>
+        ${carta.raridade ? `<div style="position:absolute;top:5px;right:5px;background:#000000bb;border-radius:4px;padding:2px 5px;font-size:8px;color:#fbbf24;">${escHtml(carta.raridade)}</div>` : ''}
+      </div>
+      ${carta.efeito || carta.descricao ? `
+      <div style="padding:8px;border-top:1px solid ${cor}44;font-size:9px;color:#94a3b8;line-height:1.4;max-height:72px;overflow-y:auto;">
+        ${carta.efeito ? `<span style="color:#a78bfa">${escHtml(carta.efeito)}</span>` : ''}
+        ${carta.descricao && !carta.efeito ? `<span style="font-style:italic">${escHtml(carta.descricao)}</span>` : ''}
+        ${carta.gatilho ? `<br><span style="color:#60a5fa">Gatilho: ${escHtml(carta.gatilho)}</span>` : ''}
+      </div>` : ''}
+    `;
+    div.onmouseenter = () => { div.style.transform = 'translateY(-4px)'; div.style.boxShadow = `0 8px 24px ${cor}66`; };
+    div.onmouseleave = () => { div.style.transform = ''; div.style.boxShadow = ''; };
+    grid.appendChild(div);
+  });
+ 
+  if (filtradas.length === 0) {
+    grid.innerHTML = '<p style="color:#64748b;grid-column:1/-1;text-align:center;padding:40px">Nenhuma carta encontrada.</p>';
+  }
+}
+ 
+document.addEventListener('keydown', e => {
+  if (e.key === 'Escape') fecharCatalogo();
+});
+</script>
+</body>
+</html>
